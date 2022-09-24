@@ -60,7 +60,7 @@ jobs:
         run: |
           swiftc -o $FILTER_PATH $FILTER_SWIFT_PATH
           sudo chmod 777 $FILTER_PATH
-          echo "::set-output name=size::$(stat -f%z $IPA_OUTPUT_PATH)"
+          echo "::set-output name=size::$(stat -f%z \'$IPA_OUTPUT_PATH\')"
           echo "::set-output name=version_date::$(date -u +"%Y-%m-%dT%T")"
           echo "::set-output name=notes::$($FILTER_PATH "${{ github.event.pull_request.body }}")"
       - name: Validate data
