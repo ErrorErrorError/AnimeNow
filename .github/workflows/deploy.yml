@@ -2,10 +2,12 @@
 
 name: Deploy
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
     types: [closed]
+
 env:
   DEVELOPER_DIR: /Applications/Xcode_13.4.app
   APP_VERSION: '0.0.1'
@@ -45,13 +47,13 @@ jobs:
         with:
           version: ${{ env.APP_VERSION }}
       - name: Xcode archive
-        run: xcodebuild archive -destination 'generic/platform=iOS' -scheme ${{ env.IOS_SCHEME_NAME }} -archivePath ${{ env.IOS_ARCHIVE_PATH }} CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY= CODE_SIGN_ENTITLEMENTS= GCC_OPTIMIZATION_LEVEL=s SWIFT_OPTIMIZATION_LEVEL=-O
+        run: xcodebuild archive -destination 'generic/platform=iOS' -scheme '${{ env.IOS_SCHEME_NAME }}' -archivePath '${{ env.IOS_ARCHIVE_PATH }}' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY= CODE_SIGN_ENTITLEMENTS= GCC_OPTIMIZATION_LEVEL=s SWIFT_OPTIMIZATION_LEVEL=-O
       - name: Export .ipa file
         run: |
           mkdir -p ${{env.PAYLOAD_PATH}}
-          mv ${{env.IOS_ARCHIVE_PATH}}/Products/Applications/${{env.APP_NAME}}.app ${{env.PAYLOAD_PATH}}/${{env.APP_NAME}}.app
+          mv '${{env.IOS_ARCHIVE_PATH}}/Products/Applications/${{env.APP_NAME}}.app' '${{env.PAYLOAD_PATH}}/${{env.APP_NAME}}.app'
           pushd ${{env.BUILDS_PATH}}
-          zip -r ${{env.IPA_OUTPUT_PATH}} ./Payload
+          zip -r '${{env.IPA_OUTPUT_PATH}}' ./Payload
           popd
       - name: Retrieve data
         id: retrieve-data
